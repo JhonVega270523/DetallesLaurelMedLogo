@@ -3293,7 +3293,6 @@ footer {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
     background: #000;
 }
 
@@ -3307,12 +3306,11 @@ footer {
     top: -30px;
     left: 50%;
     margin-left: -162.5px;
+    pointer-events: auto;
+    touch-action: auto;
 }
 
-.tiktok-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
+/* Efecto hover deshabilitado */
 
 .tiktok-cta {
     text-align: center;
