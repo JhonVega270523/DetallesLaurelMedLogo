@@ -329,6 +329,11 @@ let logoModal;
 let logoModalImage;
 let logoCloseButton;
 
+// --- Modal de Bienvenida ---
+let welcomeModal;
+let welcomeCloseButton;
+let welcomeStartBtn;
+
 // --- Sistema de Favoritos ---
 let favoritesModal;
 let favoritesContainer;
@@ -672,21 +677,21 @@ function addEventListenersToProductButtons() {
     document.querySelectorAll('.product-card .whatsapp-icon-btn').forEach(button => {
         // Asegúrate de que no haya listeners duplicados
         button.removeEventListener('click', handleWhatsAppClick); 
-        button.addEventListener('click', handleWhatsAppClick, { passive: true });
+        button.addEventListener('click', handleWhatsAppClick);
     });
 
     // Listener para el botón "Ver Detalles" en las tarjetas de producto
     document.querySelectorAll('.product-card .btn-detail').forEach(button => {
         // Asegúrate de que no haya listeners duplicados
         button.removeEventListener('click', handleDetailClick); 
-        button.addEventListener('click', handleDetailClick, { passive: true });
+        button.addEventListener('click', handleDetailClick);
     });
 
     // Listener para las imágenes de producto
     document.querySelectorAll('.product-card > img').forEach(img => {
         // Asegúrate de que no haya listeners duplicados
         img.removeEventListener('click', handleImageClick);
-        img.addEventListener('click', handleImageClick, { passive: true });
+        img.addEventListener('click', handleImageClick);
     });
 }
 
@@ -792,6 +797,27 @@ function closeLogoModal() {
     document.body.style.overflow = '';
 }
 
+// --- Funciones para el Modal de Bienvenida ---
+function openWelcomeModal() {
+    if (!welcomeModal) return;
+    
+    // Mostrar el modal de bienvenida con animación
+    welcomeModal.classList.add('active');
+    
+    // Prevenir scroll en el body
+    document.body.style.overflow = 'hidden';
+}
+
+function closeWelcomeModal() {
+    if (!welcomeModal) return;
+    
+    // Ocultar el modal de bienvenida
+    welcomeModal.classList.remove('active');
+    
+    // Restaurar scroll en el body
+    document.body.style.overflow = '';
+}
+
 // ============================================
 // SISTEMA DE FAVORITOS
 // ============================================
@@ -822,13 +848,20 @@ function saveFavorites() {
 
 // Actualizar badge contador
 function updateFavoritesBadge() {
-    if (!favoritesBadge) return;
+    if (!favoritesBadge) {
+        console.warn('favoritesBadge element not found');
+        return;
+    }
     const count = favorites.length;
     if (count > 0) {
         favoritesBadge.textContent = count;
         favoritesBadge.style.display = 'block';
+        favoritesBadge.style.visibility = 'visible';
+        favoritesBadge.style.opacity = '1';
     } else {
         favoritesBadge.style.display = 'none';
+        favoritesBadge.style.visibility = 'hidden';
+        favoritesBadge.style.opacity = '0';
     }
 }
 
@@ -865,6 +898,11 @@ function toggleFavorite(product, button) {
     }
     
     saveFavorites();
+    
+    // Forzar actualización del badge
+    setTimeout(() => {
+        updateFavoritesBadge();
+    }, 50);
     
     // Si el modal de favoritos está abierto, actualizarlo
     if (favoritesModal && favoritesModal.classList.contains('active')) {
@@ -984,6 +1022,7 @@ function createFavoriteButton(product) {
     const button = document.createElement('button');
     button.className = 'favorite-button';
     button.title = 'Agregar a favoritos';
+    button.type = 'button'; // Prevenir comportamiento de submit
     
     // Agregar atributos data para identificar el producto
     button.setAttribute('data-product-name', product.name);
@@ -999,7 +1038,24 @@ function createFavoriteButton(product) {
         </svg>
     `;
     
+    // Usar touchstart para mejor respuesta en móvil
+    let touchStartTime = 0;
+    
+    button.addEventListener('touchstart', (e) => {
+        touchStartTime = Date.now();
+    }, { passive: true });
+    
+    button.addEventListener('touchend', (e) => {
+        const touchDuration = Date.now() - touchStartTime;
+        if (touchDuration < 500) { // Solo si es un tap rápido
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite(product, button);
+        }
+    });
+    
     button.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         toggleFavorite(product, button);
     });
@@ -1328,6 +1384,11 @@ document.addEventListener('DOMContentLoaded', () => {
     logoModalImage = document.getElementById("logoModalImage");
     logoCloseButton = logoModal ? logoModal.querySelector(".logo-close-button") : null;
 
+    // Welcome Modal elements
+    welcomeModal = document.getElementById("welcomeModal");
+    welcomeCloseButton = welcomeModal ? welcomeModal.querySelector(".welcome-close-button") : null;
+    welcomeStartBtn = document.getElementById("welcomeStartBtn");
+
     // Favorites Modal elements
     favoritesModal = document.getElementById("favoritesModal");
     favoritesContainer = document.getElementById("favoritesContainer");
@@ -1355,14 +1416,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = "¡Hola! Me interesa obtener más información de Detalles Laurel Medellín.";
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
-        }, { passive: true });
+        });
     }
 
     // --- Event Listeners para el Sistema de Favoritos ---
     
     // Botón flotante de favoritos
     if (floatingFavoritesBtn) {
-        floatingFavoritesBtn.addEventListener('click', openFavoritesModal, { passive: true });
+        floatingFavoritesBtn.addEventListener('click', openFavoritesModal);
     }
 
     // Cerrar modal de favoritos
@@ -1424,7 +1485,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const productName = this.dataset.name;
             const productPrice = this.dataset.price;
             sendToWhatsApp(productName, productPrice);
-        }, { passive: true });
+        });
     }
 
     // --- Event Listeners para el Zoom de Imagen ---
@@ -1436,7 +1497,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.classList.contains('loaded')) {
                 openImageZoom();
             }
-        }, { passive: true });
+        });
     }
 
     // Click en el botón de cerrar del modal de zoom
@@ -1455,7 +1516,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === imageZoomModal || e.target === zoomedImage) {
                 closeImageZoom();
             }
-        }, { passive: true });
+        });
     }
 
     // Cerrar zoom con la tecla ESC
@@ -1467,6 +1528,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeFavoritesModal();
             } else if (logoModal && logoModal.classList.contains('active')) {
                 closeLogoModal();
+            } else if (welcomeModal && welcomeModal.classList.contains('active')) {
+                closeWelcomeModal();
             }
         }
     });
@@ -1478,7 +1541,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (headerLogo) {
         headerLogo.addEventListener('click', function() {
             openLogoModal();
-        }, { passive: true });
+        });
     }
 
     // Click en el logo del footer para abrir modal
@@ -1486,7 +1549,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (footerLogo) {
         footerLogo.addEventListener('click', function() {
             openLogoModal();
-        }, { passive: true });
+        });
     }
 
     // Click en el botón de cerrar del modal de logo
@@ -1505,8 +1568,50 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === logoModal || e.target === logoModalImage) {
                 closeLogoModal();
             }
-        }, { passive: true });
+        });
     }
+
+    // --- Event Listeners para el Modal de Bienvenida ---
+    
+    // Click en el botón de cerrar del modal de bienvenida
+    if (welcomeCloseButton) {
+        welcomeCloseButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeWelcomeModal();
+        });
+    }
+
+    // Click en el botón "Comenzar a Explorar"
+    if (welcomeStartBtn) {
+        welcomeStartBtn.addEventListener('click', function() {
+            closeWelcomeModal();
+        });
+    }
+
+    // Click en cualquier parte del fondo del modal para cerrarlo
+    if (welcomeModal) {
+        welcomeModal.addEventListener('click', function(e) {
+            // Solo cerrar si se hace click en el fondo, no en el contenido
+            if (e.target === welcomeModal) {
+                closeWelcomeModal();
+            }
+        });
+    }
+
+    // Mostrar el modal de bienvenida solo la primera vez en esta sesión
+    // sessionStorage se borra cuando se cierra el navegador
+    setTimeout(function() {
+        // Verificar si el modal ya se mostró en esta sesión
+        const welcomeShown = sessionStorage.getItem('welcomeModalShown');
+        
+        if (!welcomeShown) {
+            // Si no se ha mostrado, mostrarlo
+            openWelcomeModal();
+            // Marcar como mostrado en esta sesión
+            sessionStorage.setItem('welcomeModalShown', 'true');
+        }
+    }, 500);
 
 
     // 5. Código de botones de filtro removido - ahora se usa Select2
@@ -1542,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 }, 50);
-            }, { passive: true });
+            });
         });
     }
 

@@ -1647,14 +1647,215 @@ footer {
     animation: fadeInUp 0.5s ease 0.3s both;
 }
 
+/* ============================================
+   MODAL DE BIENVENIDA
+   ============================================ */
+
+.welcome-modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.welcome-modal.active {
+    display: flex;
+}
+
+.welcome-modal-content {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 248, 248, 0.98) 100%);
+    padding: 20px 25px;
+    border-radius: 20px;
+    max-width: 420px;
+    width: 85%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--primary-gold);
+    animation: scaleIn 0.5s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.welcome-close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: var(--dark-gray);
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 3001;
+    background: rgba(0, 0, 0, 0.05);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.welcome-close-button:hover {
+    background: var(--primary-gold);
+    color: var(--white);
+    transform: rotate(90deg);
+    border-color: var(--dark-gold);
+}
+
+.welcome-logo {
+    margin-bottom: 12px;
+    animation: bounceIn 0.8s ease;
+}
+
+.welcome-logo img {
+    max-width: 160px;
+    height: auto;
+    filter: drop-shadow(0 4px 15px rgba(212, 175, 55, 0.4));
+}
+
+.welcome-modal-content h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--black);
+    margin: 8px 0 6px;
+    font-size: 1.5em;
+    line-height: 1.2;
+}
+
+.welcome-modal-content p {
+    color: var(--text-color);
+    font-size: 0.95em;
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.welcome-subtitle {
+    font-size: 0.88em !important;
+    color: #666;
+    margin-bottom: 12px !important;
+}
+
+.welcome-start-btn {
+    background: linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%);
+    color: var(--black);
+    border: none;
+    padding: 10px 30px;
+    font-size: 0.95em;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.welcome-start-btn:hover {
+    background: linear-gradient(135deg, var(--dark-gold) 0%, var(--primary-gold) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+}
+
+/* Responsive para modal de bienvenida */
+@media (max-width: 768px) {
+    .welcome-modal-content {
+        padding: 18px 22px;
+        max-width: 380px;
+    }
+
+    .welcome-logo img {
+        max-width: 140px;
+    }
+
+    .welcome-modal-content h2 {
+        font-size: 1.4em;
+        margin: 6px 0 5px;
+    }
+
+    .welcome-modal-content p {
+        font-size: 0.9em;
+        margin: 4px 0;
+    }
+
+    .welcome-start-btn {
+        padding: 9px 26px;
+        font-size: 0.9em;
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-modal-content {
+        padding: 16px 18px;
+        width: 88%;
+        max-width: 340px;
+    }
+
+    .welcome-close-button {
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 24px;
+    }
+
+    .welcome-logo {
+        margin-bottom: 8px;
+    }
+
+    .welcome-logo img {
+        max-width: 130px;
+    }
+
+    .welcome-modal-content h2 {
+        font-size: 1.25em;
+        margin: 6px 0 4px;
+    }
+
+    .welcome-modal-content p {
+        font-size: 0.85em;
+        margin: 4px 0;
+    }
+
+    .welcome-subtitle {
+        font-size: 0.8em !important;
+        margin-bottom: 10px !important;
+    }
+
+    .welcome-start-btn {
+        padding: 8px 22px;
+        font-size: 0.85em;
+        margin-top: 8px;
+    }
+}
+
 /* Estilos para el contenedor de la información en el modal */
 .modal-info-wrapper {
     flex: 2;
     display: flex;
     flex-direction: column;
     text-align: left;
-    position: relative; /* Para posicionar el botón al fondo */
-    padding-bottom: 60px; /* Espacio para el botón fijo al fondo */
+    position: relative; /* Para posicionar el botón y logo al fondo */
+    padding-bottom: 70px; /* Espacio para el botón y logo fijo al fondo */
 }
 
 #modalDetailName {
@@ -1694,15 +1895,36 @@ footer {
     cursor: pointer;
     font-size: 1em;
     position: absolute;
-    left: 50%;
+    left: 0; /* Posicionado a la izquierda */
     bottom: 15px; /* Pegado al fondo del modal */
-    transform: translateX(-50%);
     white-space: nowrap; /* Evita salto de línea en el texto */
     display: inline-block; /* Mantiene el ancho natural del botón */
 }
 
 #modalDetailWhatsappBtn:hover {
     background-color: #1DA851;
+}
+
+/* Logo en el modal de productos */
+.modal-logo {
+    position: absolute;
+    right: 0;
+    bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.modal-logo img {
+    width: 80px;
+    height: auto;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.modal-logo img:hover {
+    opacity: 1;
 }
 
 /* Estilos para el Formulario de Contacto */
@@ -2034,15 +2256,60 @@ footer {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         z-index: 1002;
     }
-    /* Botón del modal en móvil: flujo normal, centrado, sin posición absoluta */
-    #modalDetailWhatsappBtn {
-        position: static;
-        transform: none;
-        margin-top: 10px;
-        align-self: center;
-    }
     .modal-info-wrapper {
-        padding-bottom: 10px;
+        padding-bottom: 0 !important;
+        position: static !important;
+        display: block !important;
+        text-align: center;
+    }
+    
+    /* Hacer que el título, precio y descripción ocupen todo el ancho */
+    .modal-info-wrapper #modalDetailName {
+        width: 100%;
+        display: block;
+    }
+    
+    .modal-info-wrapper #modalDetailPrice {
+        width: 100%;
+        display: block;
+    }
+    
+    .modal-info-wrapper #modalDetailDescription {
+        width: 100%;
+        display: block;
+        margin-bottom: 15px;
+    }
+    
+    /* Contenedor para botón y logo en la misma línea */
+    .modal-info-wrapper #modalDetailWhatsappBtn {
+        position: static !important;
+        display: inline-flex !important;
+        align-items: center;
+        width: auto !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 10px;
+        left: auto;
+        bottom: auto;
+        vertical-align: middle;
+    }
+    
+    .modal-info-wrapper .modal-logo {
+        position: static !important;
+        display: inline-flex !important;
+        align-items: center;
+        width: auto !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: 0;
+        right: auto;
+        bottom: auto;
+        vertical-align: middle;
+    }
+    
+    .modal-logo img {
+        width: 60px;
+        display: block;
     }
 
     /* Ajustes de la imagen del modal para móviles */
@@ -2102,11 +2369,13 @@ footer {
         margin-top: 5px;
         margin-bottom: 8px;
         line-height: 1.2;
+        order: 1;
     }
 
     #modalDetailPrice {
         font-size: 1em;
         margin-bottom: 10px;
+        order: 2;
     }
 
     #modalDetailDescription {
@@ -2114,14 +2383,44 @@ footer {
         max-height: 90px;
         overflow-y: auto;
         line-height: 1.4;
-        margin-bottom: 15px;
+        margin-bottom: 0;
+        width: 100%;
+        flex: 0 0 100%;
+        order: 3;
     }
 
-    #modalDetailWhatsappBtn {
+    .modal-info-wrapper #modalDetailWhatsappBtn {
+        position: static !important;
         padding: 8px 15px;
-        font-size: 0.9em;
-        margin-top: auto;
-        align-self: center;
+        font-size: 0.85em;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 10px;
+        left: auto;
+        bottom: auto;
+        display: inline-flex !important;
+        align-items: center;
+        width: auto !important;
+        vertical-align: middle;
+    }
+    
+    /* Logo del modal en móvil pequeño: en la misma línea que el botón de WhatsApp */
+    .modal-info-wrapper .modal-logo {
+        position: static !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: 0;
+        right: auto;
+        bottom: auto;
+        display: inline-flex !important;
+        align-items: center;
+        width: auto !important;
+        vertical-align: middle;
+    }
+    
+    .modal-logo img {
+        width: 55px;
+        display: block;
     }
 
     /* Botón flotante de WhatsApp para móviles */
